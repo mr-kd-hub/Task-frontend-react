@@ -8,7 +8,9 @@ export interface InitialState {
     status: any,
     offset: number,
     limit: number
-  }
+  },
+  error: string,
+  loading: boolean
 }
 
 const initialState: InitialState = {
@@ -22,8 +24,9 @@ const initialState: InitialState = {
     status: "All",
     offset: 0,
     limit: 10
-
-  }
+  },
+  error: "",
+  loading: false
 }
 
 export const taskSlice = createSlice({
@@ -47,12 +50,21 @@ export const taskSlice = createSlice({
         ...state.filter,
         status: "All",
       }
+    },
+    setError: (state,action) => {
+      state.error = action.payload
+    },
+    resetError: (state) => {
+      state.error = ""
+    },
+    manageLoading: (state,action) => {
+      state.loading = action.payload
     }
 
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setTasks, setForm, setFilter, resetFilter } = taskSlice.actions
+export const { setTasks, setForm, setFilter, resetFilter, resetError, setError, manageLoading } = taskSlice.actions
 
 export default taskSlice.reducer
