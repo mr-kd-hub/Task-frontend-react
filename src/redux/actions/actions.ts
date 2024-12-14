@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AppDispatch, RootState } from "../store";
+import { AppDispatch } from "../store";
 import { manageLoading, resetError, setError, setTasks } from "../slices/task.slice";
 import { IFormFields } from "../../Interface";
 
