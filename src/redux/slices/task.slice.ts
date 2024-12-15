@@ -5,9 +5,10 @@ export interface InitialState {
   tasks: any[]
   form: IFormFields,
   filter: {
-    status: any,
+    status: string | undefined,
     offset: number,
     limit: number
+    search: string
   },
   error: string,
   loading: boolean
@@ -23,7 +24,8 @@ const initialState: InitialState = {
   filter:{
     status: "All",
     offset: 0,
-    limit: 10
+    limit: 10,
+    search:""
   },
   error: "",
   loading: false
