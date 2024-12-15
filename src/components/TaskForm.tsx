@@ -16,6 +16,7 @@ function TaskForm(props: any) {
       title: form?.title || "",
       description: form?.description || "",
       status: form?.status || "To Do",
+      dueDate: form?.dueDate || ""
     },
     validationSchema: yup.object().shape({
       title: yup.string().required("Title is required"),
@@ -33,8 +34,17 @@ function TaskForm(props: any) {
     },
   });
   const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm, setValues } = formik;
-  const { title, status, description } = values;
+  const { title, status, description, dueDate } = values;
 
+  const handleDateChange = (e: any) => {
+    const dateObject = new Date(e.target.value);
+    const day = String(dateObject.getDate()).padStart(2, "0");
+    const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+    const year = dateObject.getFullYear();
+    const formattedDate = `${year}-${month}-${day}`; //"2013-01-08"
+
+    setValues({ ...values, dueDate: formattedDate });
+  };
  useEffect(() => {
    if (form?._id) {
      setValues({
@@ -42,11 +52,14 @@ function TaskForm(props: any) {
        title: form?.title,
        description: form?.description,
        status: form?.status,
+       dueDate: form?.dueDate,
      });
      return;
    }
    resetForm();
  }, [form]);
+ 
+ console.log("form",form?.dueDate, dueDate);
  
   return (
     <div className="p-3 border flex flex-col gap-4 border-dashed border-gray-950 border-spacing-6">
@@ -89,6 +102,17 @@ function TaskForm(props: any) {
             value={status}
             onChange={handleChange}
             onBlur={handleBlur}
+          />
+        </div>
+        <div>
+          <input
+            placeholder="yyyy-mm-dd"
+            name="dueDate"
+            type="date"
+            value={dueDate}
+            onChange={handleDateChange}
+            onBlur={handleBlur}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
 

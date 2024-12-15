@@ -20,7 +20,8 @@ const initialState: InitialState = {
   form: {
     title: '',
     description: '',
-    status: ''
+    status: '',
+    dueDate: ''
   },
   filter:{
     status: "All",

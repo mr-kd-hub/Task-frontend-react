@@ -24,7 +24,9 @@ function ListTask() {
       dispatch(await deleteTaskAction(id));
     }
     if (action === "edit") {
-      dispatch(setForm(tasks.find((task) => task._id === id)));
+      dispatch(setForm(tasks.find((task:any) => task._id === id)));
+      console.log("selected",tasks.find((task:any) => task._id === id));
+      
     }
     if (action === "view") {
       const data = await dispatch(getTaskAction(id));      
@@ -61,6 +63,9 @@ function ListTask() {
                   Status
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Due Date
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Actions
                 </th>
               </tr>
@@ -75,10 +80,11 @@ function ListTask() {
                       >
                         <td>{task?.title}</td>
                         <td>
-                        {task?.description?.slice(0, 50) || "-"}
-                        {task?.description?.length > 50 && '...'}
+                          {task?.description?.slice(0, 50) || "-"}
+                          {task?.description?.length > 50 && "..."}
                         </td>
                         <td>{task?.status}</td>
+                        <td>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-"}</td>
                         <td>
                           <div
                             className="inline-flex rounded-md shadow-sm"
