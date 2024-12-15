@@ -2,16 +2,17 @@ import { createSlice } from '@reduxjs/toolkit'
 import { IFormFields } from '../../Interface';
 
 export interface InitialState {
-  tasks: any[]
-  form: IFormFields,
+  tasks: any[];
+  form: IFormFields;
   filter: {
-    status: string | undefined,
-    offset: number,
-    limit: number
-    search: string
-  },
-  error: string,
-  loading: boolean
+    status: string | undefined;
+    offset: number | undefined;
+    limit: number | undefined;
+    search: string | undefined;
+    sort: string;
+  };
+  error: string;
+  loading: boolean;
 }
 
 const initialState: InitialState = {
@@ -23,9 +24,10 @@ const initialState: InitialState = {
   },
   filter:{
     status: "All",
-    offset: 0,
-    limit: 10,
-    search:""
+    offset: undefined,
+    limit: undefined,
+    search:"",
+    sort:"createdAt"
   },
   error: "",
   loading: false
@@ -51,6 +53,8 @@ export const taskSlice = createSlice({
       state.filter = {
         ...state.filter,
         status: "All",
+        sort:"createdAt",
+        search:""
       }
     },
     setError: (state,action) => {
