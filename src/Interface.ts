@@ -5,3 +5,8 @@ export interface IFormFields {
   dueDate: any
 }
 
+export interface IUserFormFields {
+  email: string;
+  password: string;
+}
+

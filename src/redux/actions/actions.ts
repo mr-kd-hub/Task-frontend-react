@@ -1,7 +1,10 @@
-import axios from "axios";
+// import axios from "axios";
+import axios from "../../axiosInstance";
 import { AppDispatch } from "../store";
 import { manageLoading, resetError, setError, setTasks } from "../slices/task.slice";
-import { IFormFields } from "../../Interface";
+import { IFormFields, IUserFormFields } from "../../Interface";
+import { login, setAuthState } from "../slices/auth.slice";
+    // "@types/react-router-dom": "^5.3.3"
 
 export const setTasksAction = (): any => {
   return async (dispatch: AppDispatch, getState: any) => {
@@ -9,7 +12,7 @@ export const setTasksAction = (): any => {
       const currentState = getState();
       const filter = currentState?.data?.filter;
       dispatch(manageLoading(true));
-      const response = await axios.post("http://localhost:3000/task/list", {
+      const response = await axios.post("/task/list", {
         ...filter,
         status: filter?.status === "All" ? undefined : filter?.status,
       });
@@ -27,7 +30,7 @@ export const createTaskAction = (body: IFormFields): any => {
   return async (dispatch: AppDispatch, getState: any) => {
     try {
       const currentState = getState();
-      const response = await axios.post(`http://localhost:3000/task`, {
+      const response = await axios.post(`/task`, {
         ...body,
       });
       if(response.data.task){
@@ -47,7 +50,7 @@ export const deleteTaskAction = (id: string): any => {
     try {
       if (!id) return;
       const currentState = getState();
-      const response = await axios.delete(`http://localhost:3000/task/${id}`);
+      const response = await axios.delete(`/task/${id}`);
       console.log("currentState?.tasks", currentState?.data?.tasks, id);
 
       if (response.status === 200) {
@@ -71,7 +74,7 @@ export const updateTaskAction = (id: string, body: IFormFields): any => {
       const currentState = getState();
       const tasks = [...currentState.data.tasks];
 
-      const response = await axios.patch(`http://localhost:3000/task/${id}`, {
+      const response = await axios.patch(`/task/${id}`, {
         ...body,
       });
       if (response.status === 200) {
@@ -95,24 +98,74 @@ export const updateTaskAction = (id: string, body: IFormFields): any => {
 };
 
 export const getTaskAction = (id: string): any => {
-    return async (dispatch: AppDispatch, getState: any) => {
-      try {
-        if (!id) return;
-        const response = await axios.get(`http://localhost:3000/task/${id}`);
-        if (response.status === 200) {
-          return response?.data?.task
-        }
-      } catch (err:any) {
-        dispatch(setErrorAction(err?.message || "Something went wrong"))
-        dispatch(manageLoading(false));
-        return
+  return async (dispatch: AppDispatch, getState: any) => {
+    try {
+      if (!id) return;
+      const response = await axios.get(`/task/${id}`);
+      if (response.status === 200) {
+        return response?.data?.task;
       }
-    };
+    } catch (err: any) {
+      dispatch(setErrorAction(err?.message || "Something went wrong"));
+      dispatch(manageLoading(false));
+      return;
+    }
   };
+};
 
-  export const setErrorAction = (err: string): any => {
-    return (dispatch: AppDispatch, getState: any) => {
-      dispatch(setError(err));
-      setTimeout(() => dispatch(resetError()), 1500);
-    };
+export const setErrorAction = (err: string): any => {
+  return (dispatch: AppDispatch, getState: any) => {
+    dispatch(setError(err));
+    setTimeout(() => dispatch(resetError()), 1500);
   };
+};
+
+export const loginAction = (body:IUserFormFields) => {
+  return async(dispatch: AppDispatch, getState: any) => {
+    try{
+      const response = await axios.post(`/auth/sign-in`, {
+        ...body,
+      });
+      if(response.status === 200){
+        dispatch(login(response?.data?.token))
+        return 200;
+      }
+      dispatch(setError("Something went wrong while login"));
+      return 401;
+    }
+    catch(err:any){
+      dispatch(setError(err?.message || "Something went wrong"));
+      dispatch(manageLoading(false));
+      return;
+    }
+  }
+}
+
+export const registerAction = (body:IUserFormFields) => {
+  return async(dispatch: AppDispatch, getState: any) => {
+    try{
+      const response = await axios.post(`/auth/sign-up`, {
+        ...body,
+      });
+      if(response.status === 200){
+        dispatch(login(response?.data?.token))
+        return 200;
+      }
+      dispatch(setError("Something went wrong while login"));
+      return 401;
+    }
+    catch(err:any){
+      dispatch(setError(err?.message || "Something went wrong"));
+      dispatch(manageLoading(false));
+      return;
+    }
+  }
+}
+
+export const setAuthStateAction = (token:any):any => {
+  return async(dispatch: AppDispatch, getState: any) => {
+    const tk = token || localStorage.getItem("token");
+    dispatch(setAuthState(tk))
+    return !!token
+  }
+}

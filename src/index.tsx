@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import Login from "./components/Login";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -11,7 +13,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      {/* <Router>
+        <Routes>
+          <Route path="/login" element={<Login/>} /> */}
+          {/* <PrivateRoute path="/dashboard" element={<App />} /> */}
+          <App />
+        {/* </Routes>
+      </Router> */}
     </Provider>
   </React.StrictMode>
 );
